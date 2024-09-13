@@ -84,6 +84,7 @@ export default function CardsAllProducts() {
       key={index}
     >
       <CardMedia
+        aria-label="media-card"
         component="img"
         height="2rem"
         // image={
