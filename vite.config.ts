@@ -10,7 +10,7 @@ export default defineConfig({
     // so you don't need to import them every time
     globals: true,
     // run tests in jsdom environment
-    // environment: "jsdom",
+    environment: "jsdom",
     // global test setup
     // setupFiles: "./tests/setup.js",
     exclude: [...configDefaults.exclude, "tests/e2e/*"],

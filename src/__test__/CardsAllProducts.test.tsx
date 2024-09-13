@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CardsAllProducts from "../components/CardsAllProducts";
 import "@testing-library/jest-dom";
-import { useState } from "react";
+// import { useState } from "react";
 
 // interface CategoryProps {
 //   id: number;

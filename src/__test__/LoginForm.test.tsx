@@ -2,10 +2,17 @@ import { render, screen } from "@testing-library/react";
 // import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import LoginForm from "../components/LoginForm";
+import { vi } from "vitest";
 
 describe("Component test", () => {
   beforeEach(() => {
-    localStorage.clear();
+    // Mock localStorage
+    global.localStorage = {
+      clear: vi.fn(),
+      getItem: vi.fn(),
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
+    };
   });
   test("Element test", async () => {
     render(<LoginForm />);
