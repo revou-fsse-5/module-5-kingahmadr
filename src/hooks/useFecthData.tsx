@@ -162,7 +162,7 @@ const useFecthData = () => {
       setIsLoading(true);
       const trailing: string = "/products?limit=30";
 
-      await delay(5000);
+      // await delay(5000);
 
       const response = await fetch(`${API_URL}${trailing}`, {
         method: "GET",

@@ -1,6 +1,9 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CardsAllProducts from "../components/CardsAllProducts";
+import { MemoryRouter } from "react-router-dom";
+import HomePage from "../pages/Home";
+import { DataProvider } from "../contexts/UseDataContext";
 import "@testing-library/jest-dom";
 // import { useState } from "react";
 
@@ -36,19 +39,51 @@ const isLocalStorageKeyExists = (key: string) => {
 };
 
 describe("Component test", () => {
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+  beforeAll(async () => {
+    await delay(10000);
+  });
   test("add to cart button", async () => {
-    render(<CardsAllProducts />);
+    render(
+      <DataProvider>
+        <MemoryRouter>
+          <CardsAllProducts />
+        </MemoryRouter>
+      </DataProvider>
+    );
     userEvent.click(screen.getByLabelText("add to shopping cart"));
     await waitFor(() => {
       expect(isLocalStorageKeyExists("Carted") === true);
     });
   });
 
-  test("is Image loaded", () => {
-    render(<CardsAllProducts />);
+  test("should have the add to cart button", async () => {
+    // Wait for the button to appear in the DOM
+    const addToCartButtons = await screen.findAllByLabelText(
+      "add to shopping cart"
+    );
+
+    // Check if at least one "add to cart" button exists
+    expect(addToCartButtons.length).toBeGreaterThan(0);
+
+    // Optionally, assert on a specific button element
+    const addToCartButton = addToCartButtons[0];
+    expect(addToCartButton).toBeInTheDocument();
+  });
+  test("is Image loaded", async () => {
+    render(
+      <DataProvider>
+        <MemoryRouter>
+          <CardsAllProducts />
+        </MemoryRouter>
+      </DataProvider>
+    );
+    // await waitFor(() => {
     const image =
       "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg";
-    const imgElement = screen.getByRole("img");
+    const imgElement = screen.findAllByLabelText("media-card");
     expect(imgElement).toHaveAttribute("src", image);
   });
+  // });
 });

@@ -16,14 +16,12 @@ import Pages404 from "./pages/Pages404";
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <HomePage />,
+  },
+  {
     path: "/products",
     element: <HomePage />,
-    // children: [
-    //   {
-    //     path: "/products/:productID",
-    //     element: <PageDetails />,
-    //   },
-    // ],
   },
   {
     path: "/products/:productID",

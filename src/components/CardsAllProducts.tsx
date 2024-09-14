@@ -132,6 +132,7 @@ export default function CardsAllProducts() {
     <>
       <div className="flex gap-10 p-10 justify-center">
         {isLoading ? RotatingLoader : <>{renderProducts}</>}
+        {/* {renderProducts} */}
       </div>
       <div className="flex justify-center items-center p-10 mx-auto">
         <PaginationRounded
