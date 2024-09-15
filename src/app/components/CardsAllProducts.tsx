@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import Card from "@mui/material/Card";
 // import CardHeader from "@mui/material/CardHeader";
@@ -15,19 +17,28 @@ import { useEffect, useState } from "react";
 import PaginationRounded from "./PaginationRounded";
 import { useDataContext } from "../contexts/UseDataContext";
 import Loader from "./Loader/Loader";
+import { AllProductsProps } from "../interfaces";
+import { getAllProducts } from "../Api";
 
 const pageSize = 3;
 
 export default function CardsAllProducts() {
-  const navigate = useNavigate();
-  const { isLoading, dataProducts, getAllProducts, addSingleProductToCart } =
-    useFecthData();
+  // const navigate = useNavigate();
+  // const { isLoading, dataProducts, getAllProducts, addSingleProductToCart } =
+  //   useFecthData();
   const { RotatingLoader } = Loader();
 
-  const { userToken } = useDataContext();
+  // const { userToken } = useDataContext();
 
+  const [dataProducts, setDataProducts] = useState<
+    AllProductsProps[] | undefined
+  >([]);
   useEffect(() => {
-    getAllProducts();
+    async function fetchData() {
+      const data = await getAllProducts();
+      setDataProducts(data);
+    }
+    fetchData();
   }, []);
   const [pagination, setPagination] = useState({
     count: 5, // initial of anything
@@ -35,25 +46,30 @@ export default function CardsAllProducts() {
     to: pageSize,
   });
 
-  const addToCart = (id?: string | number) => {
-    const accessTokenLocal: unknown = localStorage.getItem("token");
-    const rememberMe: string | null = localStorage.getItem("rememberMe");
+  // const addToCart = (id?: string | number) => {
+  //   const accessTokenLocal: unknown = localStorage.getItem("token");
+  //   const rememberMe: string | null = localStorage.getItem("rememberMe");
 
-    if (rememberMe === "true" && accessTokenLocal) {
-      console.log("remember me", rememberMe);
-      addSingleProductToCart(id);
-    } else {
-      if (accessTokenLocal !== userToken) {
-        alert(`You must login first to add product to cart`);
-        console.log(userToken);
-        navigate("/login");
-      } else {
-        addSingleProductToCart(id);
-      }
-    }
-  };
+  //   if (rememberMe === "true" && accessTokenLocal) {
+  //     console.log("remember me", rememberMe);
+  //     addSingleProductToCart(id);
+  //   } else {
+  //     if (accessTokenLocal !== userToken) {
+  //       alert(`You must login first to add product to cart`);
+  //       console.log(userToken);
+  //       navigate("/login");
+  //     } else {
+  //       addSingleProductToCart(id);
+  //     }
+  //   }
+  // };
 
   // console.log(pagination.count, pagination.from, pagination.to);
+  if (!dataProducts) {
+    return (
+      <div className="flex gap-10 p-10 justify-center">{RotatingLoader}</div>
+    );
+  }
   const productsSlice = dataProducts.slice(pagination.from, pagination.to);
 
   const handlePageChange = (
@@ -84,7 +100,6 @@ export default function CardsAllProducts() {
       key={index}
     >
       <CardMedia
-        aria-label="media-card"
         component="img"
         height="2rem"
         // image={
@@ -114,7 +129,7 @@ export default function CardsAllProducts() {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton
-            onClick={() => addToCart(products.id)}
+            // onClick={() => addToCart(products.id)}
             color="primary"
             aria-label="add to shopping cart"
           >
@@ -131,8 +146,8 @@ export default function CardsAllProducts() {
   return (
     <>
       <div className="flex gap-10 p-10 justify-center">
-        {isLoading ? RotatingLoader : <>{renderProducts}</>}
-        {/* {renderProducts} */}
+        {/* {isLoading ? RotatingLoader : <>{renderProducts}</>} */}
+        {renderProducts}
       </div>
       <div className="flex justify-center items-center p-10 mx-auto">
         <PaginationRounded
