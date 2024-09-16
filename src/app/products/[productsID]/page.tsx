@@ -1,16 +1,18 @@
-import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import useFecthData from "../hooks/useFecthData";
+"use client";
 
+import { AllProductsProps } from "@/app/interfaces";
+import React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { useDataContext } from "../contexts/UseDataContext";
-import { AllProductsProps } from "../interfaces";
-import { maxWidthMediaQuery, fontSizeMediaQuery } from "../constans";
+// import { useDataContext } from "../contexts/UseDataContext";
+import { maxWidthMediaQuery, fontSizeMediaQuery } from "@/app/constans";
+import { useEffect, useState } from "react";
+import { getSingleProducts } from "@/app/Api";
+import Loader from "@/app/components/Loader/Loader";
 
 interface SingleProductProps extends AllProductsProps {
   images: string[];
@@ -18,29 +20,40 @@ interface SingleProductProps extends AllProductsProps {
   // other properties...
 }
 
-const PageDetails = () => {
-  const { productID } = useParams();
-  const navigate = useNavigate();
-  const { singleDataProduct, getSingleProducts, addSingleProductToCart } =
-    useFecthData();
-  const { userToken } = useDataContext();
+const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
+  //   const { singleDataProduct, getSingleProducts, addSingleProductToCart } =
+  //     useFecthData();
+  //   const { userToken } = useDataContext();
+  const { RotatingLoader } = Loader();
+  const [singleDataProduct, setSingleDataProduct] = useState<
+    AllProductsProps[] | undefined
+  >([]);
   useEffect(() => {
-    getSingleProducts(productID);
-  }, [productID]);
-  console.log(singleDataProduct);
-  if (!singleDataProduct) {
-    return <div>Loading...</div>;
-  }
-  const addToCart = (id?: string | number) => {
-    const accessTokenLocal: unknown = localStorage.getItem("token");
-    if (accessTokenLocal !== userToken) {
-      alert(`You must login first to add product to cart`);
-      console.log(userToken);
-      navigate("/login");
-    } else {
-      addSingleProductToCart(id);
+    async function fetchData() {
+      const data = await getSingleProducts(params.productsID);
+      setSingleDataProduct(data);
+      console.log("data", data);
     }
-  };
+    fetchData();
+  }, [params.productsID]);
+  //   const singleDataProduct: AllProductsProps[] | undefined =
+  //     await getSingleProducts(params.productsID);
+  console.log("Data products", singleDataProduct);
+  if (!singleDataProduct) {
+    return (
+      <div className="flex gap-10 p-10 justify-center">{RotatingLoader}</div>
+    );
+  }
+  //   const addToCart = (id?: string | number) => {
+  //     const accessTokenLocal: unknown = localStorage.getItem("token");
+  //     if (accessTokenLocal !== userToken) {
+  //       alert(`You must login first to add product to cart`);
+  //       console.log(userToken);
+  //       navigate("/login");
+  //     } else {
+  //       addSingleProductToCart(id);
+  //     }
+  //   };
 
   const renderSingleProduct = Array.isArray(singleDataProduct) ? (
     singleDataProduct.map((product, index) => (
@@ -117,9 +130,9 @@ const PageDetails = () => {
           </Typography>
           <Button
             sx={{ p: 1, m: "1rem" }}
-            onClick={() => {
-              addToCart(product.id);
-            }}
+            // onClick={() => {
+            //   addToCart(product.id);
+            // }}
             variant="contained"
           >
             Add To Cart
@@ -147,7 +160,7 @@ const PageDetails = () => {
         <CardMedia
           component="img"
           height="auto"
-          image={(singleDataProduct as SingleProductProps).images[0]}
+          image={(singleDataProduct as SingleProductProps).image}
           alt="Product image"
         />
       </Card>
@@ -195,16 +208,16 @@ const PageDetails = () => {
         </Typography>
         <Button
           sx={{ p: 1, m: "1rem" }}
-          onClick={() => {
-            if (
-              (singleDataProduct as SingleProductProps) &&
-              (singleDataProduct as SingleProductProps).id
-            ) {
-              addToCart((singleDataProduct as SingleProductProps).id);
-            } else {
-              console.error("Product ID is not available");
-            }
-          }}
+          //   onClick={() => {
+          //     if (
+          //       (singleDataProduct as SingleProductProps) &&
+          //       (singleDataProduct as SingleProductProps).id
+          //     ) {
+          //       addToCart((singleDataProduct as SingleProductProps).id);
+          //     } else {
+          //       console.error("Product ID is not available");
+          //     }
+          //   }}
           variant="contained"
         >
           Add To Cart
@@ -212,13 +225,12 @@ const PageDetails = () => {
       </div>
     </Box>
   );
-
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       {renderSingleProduct}
     </div>
   );
 };
 
-export default PageDetails;
+export default ProductDetailPage;

@@ -1,8 +1,7 @@
-// import React from "react";
-// import RegisterForm from "../components/RegisterForm";
+import React from "react";
 import MultiStepForm from "../modules/MultiStepForm";
 
-const RegisterPage = () => {
+const page = () => {
   return (
     <div className="register-page">
       <MultiStepForm />
@@ -10,4 +9,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default page;

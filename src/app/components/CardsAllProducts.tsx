@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import * as React from "react";
 import Card from "@mui/material/Card";
 // import CardHeader from "@mui/material/CardHeader";
@@ -10,12 +10,12 @@ import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom";
+// import { Link, useNavigate } from "react-router-dom";
 
-import useFecthData from "../hooks/useFecthData";
+// import useFecthData from "../hooks/useFecthData";
 import { useEffect, useState } from "react";
 import PaginationRounded from "./PaginationRounded";
-import { useDataContext } from "../contexts/UseDataContext";
+// import { useDataContext } from "../contexts/UseDataContext";
 import Loader from "./Loader/Loader";
 import { AllProductsProps } from "../interfaces";
 import { getAllProducts } from "../Api";
@@ -136,7 +136,8 @@ export default function CardsAllProducts() {
             <AddShoppingCartIcon />
           </IconButton>
           <Button variant="contained">
-            <Link to={`${products.id}`}>See Details</Link>
+            {/* <Link to={`${products.id}`}>See Details</Link> */}
+            <Link href={`products/${products.id}`}> See Details </Link>
           </Button>
         </CardActions>
       </div>

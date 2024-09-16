@@ -1,3 +1,5 @@
+"use client";
+
 // import * as React from "react";
 // import Tabs from "@mui/material/Tabs";
 // import Tab from "@mui/material/Tab";
@@ -11,9 +13,9 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import CardsAllProducts from "./CardsAllProducts";
 // import CardsShoesProducts from "./CardsShoesProducts";
-import CardsProductCategories from "./CardsProductCategories";
-import CardsMensClothingProducts from "./CardMensClothingProducts";
-import CardsWomensClothing from "./CardsWomenClothingProducts";
+// import CardsProductCategories from "./CardsProductCategories";
+// import CardsMensClothingProducts from "./CardMensClothingProducts";
+// import CardsWomensClothing from "./CardsWomenClothingProducts";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -76,7 +78,7 @@ export default function CategoryTab() {
       <TabPanel value={value} index={0}>
         <CardsAllProducts />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <CardsProductCategories />
       </TabPanel>
       <TabPanel value={value} index={2}>
@@ -84,7 +86,7 @@ export default function CategoryTab() {
       </TabPanel>
       <TabPanel value={value} index={3}>
         <CardsWomensClothing />
-      </TabPanel>
+      </TabPanel> */}
     </Box>
   );
 }
