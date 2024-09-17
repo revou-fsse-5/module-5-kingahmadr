@@ -1,18 +1,15 @@
-const API_URL: string = "https://fakestoreapi.com";
 // import LoaderState from "./LoaderState";
-import { AllProductsProps, UserProps } from "../interfaces";
+import { AllProductsProps, registerUserProps, UserProps } from "../interfaces";
 import UseLocalStorage from "../lib/UseLocalStorage";
-// import Middleware from "../lib/Middleware";
-// import { cookies } from "next/headers";
 import { setCookie } from "cookies-next";
-
 interface LoginProps extends UserProps {
   username?: string;
 }
 
 // const { setLoaderState } = LoaderState();
 const { setLocalStorage, removeLocalStorage } = UseLocalStorage();
-// const { setCookies } = Middleware();
+const API_URL: string = "https://fakestoreapi.com";
+
 const userAuth = async (data: LoginProps, isChecked: boolean) => {
   const bodyData = JSON.stringify(data);
 
@@ -24,7 +21,6 @@ const userAuth = async (data: LoginProps, isChecked: boolean) => {
         "Content-Type": "application/json",
       },
       body: bodyData,
-      //   credentials: "include",
     });
     if (!response.ok) {
       alert(`Error On Login: ${response.statusText}`);
@@ -52,6 +48,32 @@ const userAuth = async (data: LoginProps, isChecked: boolean) => {
     alert(`Error On Login: ${error}`);
   } finally {
     // setLoaderState(true);
+  }
+};
+const addUsersMultiStep = async (data: registerUserProps) => {
+  const bodyData = JSON.stringify(data);
+  try {
+    // setIsLoading(true);
+    // await delay(5000);
+    const response = await fetch(`${API_URL}/users/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: bodyData,
+    });
+    if (!response.ok) {
+      alert(`Error Adding new user: ${response.statusText}`);
+      return;
+    }
+    const responseData = await response.json();
+    alert(`Success adding new user`);
+    console.log(responseData);
+    return responseData;
+  } catch (error) {
+    alert(`Error Adding new user: ${error}`);
+  } finally {
+    // setIsLoading(false);
   }
 };
 
@@ -99,4 +121,4 @@ const getSingleProducts = async (
   }
 };
 
-export { getSingleProducts, getAllProducts, userAuth };
+export { getSingleProducts, getAllProducts, userAuth, addUsersMultiStep };

@@ -9,11 +9,12 @@ import { LoginValidationForm } from "../modules/Schema";
 import { useEffect, useState } from "react";
 // import Loader from "./Loader/Loader";
 import { userAuth } from "../Api";
-// import { cookies } from "next/headers";
+import { useRouter } from "next/navigation";
 interface LoginProps extends UserProps {
   username?: string;
 }
 const LoginForm = () => {
+  const router = useRouter();
   const [checked, setChecked] = useState<boolean>(false);
   // const { RotatingLoader } = Loader();
 
@@ -22,11 +23,14 @@ const LoginForm = () => {
     if (valueRememberMe) {
       setChecked(true);
     }
-  }, []);
+  }, [checked]);
   // const { isLoading, userAuth } = useFecthData();
 
-  const handleSubmit = (data: LoginProps, isChecked: boolean) => {
-    userAuth(data, isChecked);
+  const handleSubmit = async (data: LoginProps, isChecked: boolean) => {
+    const result = await userAuth(data, isChecked);
+    if (result) {
+      router.push("/");
+    }
   };
   const handleCheckBox = () => {
     setChecked(!checked);
@@ -50,9 +54,9 @@ const LoginForm = () => {
   return (
     <>
       {/* <Navbar /> */}
-      <section className="flex flex-col items-center gap-10 mt-16">
+      <section className="flex flex-col items-center gap-10">
         <>
-          <h1 className="text-5xl text-white text-center mt-5">Login Form</h1>
+          <h1 className="text-5xl text-white text-center mt-20">Login Form</h1>
           <form
             onSubmit={formik.handleSubmit}
             className="bg-white border-2 border-gray-300 p-6 rounded-lg shadow-lg w-full max-w-md space-y-4"

@@ -12,6 +12,7 @@ import "./globals.css";
 //   variable: "--font-geist-mono",
 //   weight: "100 900",
 // });
+import { DataProvider } from "./contexts/UseDataContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,7 +29,7 @@ export default function RootLayout({
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <DataProvider>{children}</DataProvider>
       </body>
     </html>
   );

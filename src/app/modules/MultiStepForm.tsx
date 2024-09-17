@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import StepIndicator from "../components/StepIndicator";
@@ -5,20 +6,23 @@ import ProfileForm from "../components/register/ProfileForm";
 import AccountForm from "../components/register/AccountForm";
 import AddressForm from "../components/register/AddressForm";
 // import SwitchCaseStep from "../components/SwitchCaseStep";
-import Loader from "../components/Loader/Loader";
+// import Loader from "../components/Loader/Loader";
 
 import {
   ProfileValidationForm,
   AccountValidationForm,
   AddressValidationForm,
 } from "./Schema";
-import useFecthData from "../hooks/useFecthData";
+// import useFecthData from "../hooks/useFecthData";
 // import { MultiStepRegistrationProps } from "../interface";
 import { registerUserProps } from "../interfaces";
+import { addUsersMultiStep } from "../Api";
+import { useRouter } from "next/navigation";
 
 const MultiStepForm: React.FC = () => {
-  const { RotatingLoader } = Loader();
-  const { isLoading, addUsersMultiStep } = useFecthData();
+  // const { RotatingLoader } = Loader();
+  // const { isLoading, addUsersMultiStep } = useFecthData();
+  const router = useRouter();
   const [step, setStep] = useState(1);
 
   const initialValues = {
@@ -53,8 +57,11 @@ const MultiStepForm: React.FC = () => {
     console.log(step);
   };
 
-  const handleSubmit = (values: registerUserProps) => {
-    addUsersMultiStep(values);
+  const handleSubmit = async (values: registerUserProps) => {
+    const result = await addUsersMultiStep(values);
+    if (result) {
+      router.push("/login");
+    }
 
     // console.log("data values", values);
   };
@@ -77,46 +84,46 @@ const MultiStepForm: React.FC = () => {
     >
       {({ isSubmitting, handleBlur, handleChange }) => (
         <section className="flex flex-col justify-center">
-          {isLoading ? (
+          {/* {isLoading ? (
             <div className="mt-20 mx-auto">{RotatingLoader}</div>
-          ) : (
-            <>
-              <div className="mt-20 self-center">
-                <StepIndicator step={step} />
+          ) : ( */}
+          <>
+            <div className="mt-20 self-center">
+              <StepIndicator step={step} />
+            </div>
+            <Form className="relative flex flex-col mx-auto mt-10 w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
+              {/* <SwitchCaseStep index={step} /> */}
+              <div>
+                {step === 1 ? (
+                  <AccountForm onChange={handleChange} onBlur={handleBlur} />
+                ) : step === 2 ? (
+                  <ProfileForm onChange={handleChange} onBlur={handleBlur} />
+                ) : (
+                  <AddressForm onChange={handleChange} onBlur={handleBlur} />
+                )}
               </div>
-              <Form className="relative flex flex-col mx-auto mt-10 w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
-                {/* <SwitchCaseStep index={step} /> */}
-                <div>
-                  {step === 1 ? (
-                    <AccountForm onChange={handleChange} onBlur={handleBlur} />
-                  ) : step === 2 ? (
-                    <ProfileForm onChange={handleChange} onBlur={handleBlur} />
-                  ) : (
-                    <AddressForm onChange={handleChange} onBlur={handleBlur} />
-                  )}
-                </div>
 
-                <div className="mx-auto flex gap-4">
-                  {step > 1 && (
-                    <button
-                      className="w-24 px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      type="button"
-                      onClick={handlePrevious}
-                    >
-                      Previous
-                    </button>
-                  )}
+              <div className="mx-auto flex gap-4">
+                {step > 1 && (
                   <button
                     className="w-24 px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    type="submit"
-                    disabled={isSubmitting}
+                    type="button"
+                    onClick={handlePrevious}
                   >
-                    {step === validationSchema.length ? "Submit" : "Next"}
+                    Previous
                   </button>
-                </div>
-              </Form>
-            </>
-          )}
+                )}
+                <button
+                  className="w-24 px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {step === validationSchema.length ? "Submit" : "Next"}
+                </button>
+              </div>
+            </Form>
+          </>
+          {/* )} */}
         </section>
       )}
     </Formik>
