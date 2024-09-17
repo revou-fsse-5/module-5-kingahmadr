@@ -23,13 +23,14 @@ const LoginForm = () => {
     if (valueRememberMe) {
       setChecked(true);
     }
-  }, [checked]);
+  }, []);
   // const { isLoading, userAuth } = useFecthData();
 
   const handleSubmit = async (data: LoginProps, isChecked: boolean) => {
     const result = await userAuth(data, isChecked);
     if (result) {
-      router.push("/");
+      // router.push("/");
+      window.location.href = "/";
     }
   };
   const handleCheckBox = () => {

@@ -1,5 +1,10 @@
-// import Image from "next/image";
 import CategoryTab from "./components/CategoryTab";
+import Navbar from "./components/Navbar";
 export default function Home() {
-  return <CategoryTab />;
+  return (
+    <div>
+      <Navbar />
+      <CategoryTab />
+    </div>
+  );
 }

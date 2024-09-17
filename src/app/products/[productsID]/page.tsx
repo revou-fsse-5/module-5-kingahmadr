@@ -5,7 +5,7 @@ import React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-// import Navbar from "../components/Navbar";
+import Navbar from "@/app/components/Navbar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 // import { useDataContext } from "../contexts/UseDataContext";
@@ -23,7 +23,7 @@ interface SingleProductProps extends AllProductsProps {
 const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
   //   const { singleDataProduct, getSingleProducts, addSingleProductToCart } =
   //     useFecthData();
-  //   const { userToken } = useDataContext();
+  //   const { userToken } = UseDataContext();
   const { RotatingLoader } = Loader();
   const [singleDataProduct, setSingleDataProduct] = useState<
     AllProductsProps[] | undefined
@@ -227,7 +227,7 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
   );
   return (
     <div>
-      {/* <Navbar /> */}
+      <Navbar />
       {renderSingleProduct}
     </div>
   );

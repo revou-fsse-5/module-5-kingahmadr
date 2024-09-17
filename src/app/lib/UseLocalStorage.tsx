@@ -8,9 +8,14 @@ const UseLocalStorage = () => {
     const state = localStorage.removeItem(key);
     return state;
   };
+  const getLocalStorage = (key: string) => {
+    const state = localStorage.getItem(key);
+    return state;
+  };
   return {
     setLocalStorage,
     removeLocalStorage,
+    getLocalStorage,
   };
 };
 

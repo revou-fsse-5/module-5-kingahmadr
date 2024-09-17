@@ -3,7 +3,7 @@
 // import { useDataContext } from "../contexts/UseDataContext";
 
 // const ProtectedRoute: React.FC = () => {
-//   const { isAuthenticated } = useDataContext();
+//   const { isAuthenticated } = UseDataContext();
 
 //   if (isAuthenticated) {
 //     // Allow access to the protected route

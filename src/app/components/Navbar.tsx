@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 // import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -20,9 +21,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 // import { useNavigate } from "react-router-dom";
-import { useRouter } from "next/router";
-
-import { useDataContext } from "../contexts/UseDataContext";
+import { useRouter } from "next/navigation";
+import { UseDataContext } from "../contexts/UseDataContext";
+import { deleteCookie } from "cookies-next";
 
 // const StyledInputBase = styled(InputBase)(({ theme }) => ({
 //   color: "inherit",
@@ -50,7 +51,8 @@ export default function Navbar() {
   const isHumbergerButtonOpen = Boolean(humbergerButton);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const { total, isAuthenticated } = useDataContext();
+  const { total, isAuthenticated } = UseDataContext();
+  console.log("isAuthenticated in navbar", isAuthenticated);
 
   // const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
   //   setAnchorEl(event.currentTarget);
@@ -70,8 +72,13 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
-    router.push(router.asPath);
+    deleteCookie("token", {
+      maxAge: 60 * 5,
+      path: "/",
+      httpOnly: false,
+      sameSite: "strict",
+    });
+    window.location.reload();
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -216,7 +223,7 @@ export default function Navbar() {
                   </Typography>
                 </IconButton>
                 <IconButton
-                  onClick={() => router.push("/register")}
+                  onClick={() => router.push("/login")}
                   size="large"
                   color="inherit"
                 >

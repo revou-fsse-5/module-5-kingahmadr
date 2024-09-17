@@ -15,10 +15,12 @@ import Button from "@mui/material/Button";
 // import useFecthData from "../hooks/useFecthData";
 import { useEffect, useState } from "react";
 import PaginationRounded from "./PaginationRounded";
-// import { useDataContext } from "../contexts/UseDataContext";
+import { UseDataContext } from "../contexts/UseDataContext";
 import Loader from "./Loader/Loader";
 import { AllProductsProps } from "../interfaces";
-import { getAllProducts } from "../Api";
+import { getAllProducts, addSingleProductToCart } from "../Api";
+import { getCookie, hasCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 const pageSize = 3;
 
@@ -26,43 +28,60 @@ export default function CardsAllProducts() {
   // const navigate = useNavigate();
   // const { isLoading, dataProducts, getAllProducts, addSingleProductToCart } =
   //   useFecthData();
-  const { RotatingLoader } = Loader();
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
-  // const { userToken } = useDataContext();
+  const { RotatingLoader } = Loader();
+  const router = useRouter();
+
+  const { addCartTotalContext, isLoading, setLoadingState } = UseDataContext();
 
   const [dataProducts, setDataProducts] = useState<
     AllProductsProps[] | undefined
   >([]);
+  async function loader() {
+    setLoadingState(true);
+    await delay(5000);
+  }
   useEffect(() => {
     async function fetchData() {
       const data = await getAllProducts();
       setDataProducts(data);
+      loader();
     }
     fetchData();
   }, []);
+  setLoadingState(false);
+  console.log("isLoading from products", isLoading);
   const [pagination, setPagination] = useState({
     count: 5, // initial of anything
     from: 0,
     to: pageSize,
   });
 
-  // const addToCart = (id?: string | number) => {
-  //   const accessTokenLocal: unknown = localStorage.getItem("token");
-  //   const rememberMe: string | null = localStorage.getItem("rememberMe");
+  const addToCart = async (id?: string | number) => {
+    // const accessTokenLocal: unknown = localStorage.getItem("token");
+    const isAccessTokenCookies = hasCookie("token");
+    const accessTokenCookies = getCookie("token");
+    const rememberMe: string | null = localStorage.getItem("rememberMe");
 
-  //   if (rememberMe === "true" && accessTokenLocal) {
-  //     console.log("remember me", rememberMe);
-  //     addSingleProductToCart(id);
-  //   } else {
-  //     if (accessTokenLocal !== userToken) {
-  //       alert(`You must login first to add product to cart`);
-  //       console.log(userToken);
-  //       navigate("/login");
-  //     } else {
-  //       addSingleProductToCart(id);
-  //     }
-  //   }
-  // };
+    if (rememberMe === "true" && isAccessTokenCookies) {
+      console.log("remember me", rememberMe);
+      const result = await addSingleProductToCart(id);
+      if (result) {
+        router.push("/");
+      }
+    } else {
+      if (!isAccessTokenCookies) {
+        alert(`You must login first to add product to cart`);
+        console.log(accessTokenCookies);
+        router.push("/login");
+      } else {
+        await addSingleProductToCart(id);
+        addCartTotalContext();
+      }
+    }
+  };
 
   // console.log(pagination.count, pagination.from, pagination.to);
   if (!dataProducts) {
@@ -129,7 +148,7 @@ export default function CardsAllProducts() {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton
-            // onClick={() => addToCart(products.id)}
+            onClick={() => addToCart(products.id)}
             color="primary"
             aria-label="add to shopping cart"
           >
@@ -147,8 +166,10 @@ export default function CardsAllProducts() {
   return (
     <>
       <div className="flex gap-10 p-10 justify-center">
-        {/* {isLoading ? RotatingLoader : <>{renderProducts}</>} */}
+        {isLoading ? RotatingLoader : <>{renderProducts}</>}
+        {/* <Suspense fallback={RotatingLoader}>
         {renderProducts}
+        </Suspense> */}
       </div>
       <div className="flex justify-center items-center p-10 mx-auto">
         <PaginationRounded

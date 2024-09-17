@@ -29,7 +29,7 @@ interface ModalProps {
   open: boolean;
 }
 
-const { singleDataProduct, getSingleProducts } = useDataContext();
+const { singleDataProduct, getSingleProducts } = UseDataContext();
 const ModalDetails = ({ id, open, onClose }: ModalProps) => {
   useEffect(() => {
     getSingleProducts(id);

@@ -2,14 +2,19 @@
 import { AllProductsProps, registerUserProps, UserProps } from "../interfaces";
 import UseLocalStorage from "../lib/UseLocalStorage";
 import { setCookie } from "cookies-next";
+// import LoaderState from "./LoaderState";
+
 interface LoginProps extends UserProps {
   username?: string;
 }
 
 // const { setLoaderState } = LoaderState();
-const { setLocalStorage, removeLocalStorage } = UseLocalStorage();
+const { setLocalStorage, removeLocalStorage, getLocalStorage } =
+  UseLocalStorage();
+// const { setLoaderState } = LoaderState();
 const API_URL: string = "https://fakestoreapi.com";
-
+// const { addCartTotalContext } = UseDataContext();
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const userAuth = async (data: LoginProps, isChecked: boolean) => {
   const bodyData = JSON.stringify(data);
 
@@ -81,7 +86,8 @@ const getAllProducts = async (): Promise<AllProductsProps[] | undefined> => {
   const trailing: string = "/products?limit=30";
 
   try {
-    // setLoaderState(true);
+    // await setLoaderState(true);
+    // await delay(5000);
     const response = await fetch(`${API_URL}${trailing}`, {
       method: "GET",
     });
@@ -95,7 +101,7 @@ const getAllProducts = async (): Promise<AllProductsProps[] | undefined> => {
   } catch (error) {
     alert(`Error fetching data Products: ${error}`);
   } finally {
-    // setLoaderState(false);
+    // await setLoaderState(false);
   }
 };
 
@@ -117,8 +123,47 @@ const getSingleProducts = async (
     return responseData;
   } catch (error) {
     alert(`Error fetching data Single Products: ${error}`);
-    // navigate("/products");
   }
 };
 
-export { getSingleProducts, getAllProducts, userAuth, addUsersMultiStep };
+const addSingleProductToCart = async (id: string | undefined | number) => {
+  try {
+    const response = await fetch(`${API_URL}/products/${id}`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      alert(`Error fetching Single Products: ${response.statusText}`);
+    }
+    const responseData = await response.json();
+
+    const existingCartItems = JSON.parse(getLocalStorage("Carted") || "[]");
+    // Check if the item already exists in the cart
+    // const itemExists = existingCartItems.find(
+    //   (item: { id: string }) => item.id === id
+    // );
+
+    // if (itemExists) {
+    //   alert("This item is already in your cart.");
+    //   return;
+    // }
+
+    existingCartItems.push(responseData);
+
+    // localStorage.setItem("Carted", JSON.stringify(existingCartItems));
+    setLocalStorage("Carted", JSON.stringify(existingCartItems));
+
+    const itemTotal = existingCartItems.length;
+    console.log("Hook item Total", itemTotal);
+    return responseData;
+  } catch (error) {
+    alert(`Error fetching data Single Products: ${error}`);
+  }
+};
+
+export {
+  getSingleProducts,
+  getAllProducts,
+  userAuth,
+  addUsersMultiStep,
+  addSingleProductToCart,
+};

@@ -18,24 +18,38 @@ interface DataContextType {
   triggerInContext: boolean;
   userToken?: userLoginProps;
   total: number;
+  isLoading: boolean;
   addCartTotalContext: () => void;
   handleTrigger: () => void;
   login: () => void;
   handleToken: (token: userLoginProps) => void;
+  setLoadingState: (value: boolean) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 export const DataProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+  //   const [isAuthenticated, setIsAuthenticated] = useState(() => {
+  //     const result = hasCookie("token");
+  //     return !!result;
+  //   });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  useEffect(() => {
     const result = hasCookie("token");
-    return !!result;
-  });
+    if (result) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+  console.log("isAuthenticated in context", isAuthenticated);
   const [total, setTotal] = useState(0);
   const [triggerInContext, setTriggerInContext] = useState(false);
   const [userToken, setUserToken] = useState<userLoginProps>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const setLoadingState = (value: boolean) => {
+    setIsLoading(value);
+  };
   const login = () => {
     setIsAuthenticated(true);
   };
@@ -61,10 +75,12 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
         triggerInContext,
         total,
         userToken,
+        isLoading,
         handleToken,
         login,
         addCartTotalContext,
         handleTrigger,
+        setLoadingState,
       }}
     >
       {children}
@@ -72,7 +88,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-export const useDataContext = () => {
+export const UseDataContext = () => {
   const context = useContext(DataContext);
   if (context === undefined) {
     throw new Error("useDataContext must be used within an AuthProvider");

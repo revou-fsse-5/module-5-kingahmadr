@@ -24,7 +24,7 @@
 //   >([]);
 //   const [itemInCart, setItemInCart] = useState(0);
 //   const { userToken, handleToken, addCartTotalContext, login } =
-//     useDataContext();
+//     UseDataContext();
 
 //   const [isLoading, setIsLoading] = useState<boolean>(false);
 
