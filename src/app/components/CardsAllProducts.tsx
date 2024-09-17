@@ -10,28 +10,22 @@ import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Button from "@mui/material/Button";
-// import { Link, useNavigate } from "react-router-dom";
-
-// import useFecthData from "../hooks/useFecthData";
 import { useEffect, useState } from "react";
 import PaginationRounded from "./PaginationRounded";
 import { UseDataContext } from "../contexts/UseDataContext";
-import Loader from "./Loader/Loader";
+import { RotatingLoader } from "./Loader/NewLoader";
 import { AllProductsProps } from "../interfaces";
-import { getAllProducts, addSingleProductToCart } from "../Api";
+import { getAllProducts, addSingleProductToCart } from "../api";
 import { getCookie, hasCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
 const pageSize = 3;
 
 export default function CardsAllProducts() {
-  // const navigate = useNavigate();
-  // const { isLoading, dataProducts, getAllProducts, addSingleProductToCart } =
-  //   useFecthData();
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
-  const { RotatingLoader } = Loader();
+  // const { RotatingLoader } = Loader();
   const router = useRouter();
 
   const { addCartTotalContext, isLoading, setLoadingState } = UseDataContext();
@@ -39,20 +33,25 @@ export default function CardsAllProducts() {
   const [dataProducts, setDataProducts] = useState<
     AllProductsProps[] | undefined
   >([]);
-  async function loader() {
-    setLoadingState(true);
-    await delay(5000);
+  async function loader(value: boolean) {
+    setLoadingState(value);
+    await delay(2000);
+  }
+
+  async function fetchData() {
+    const data = await getAllProducts();
+    setDataProducts(data);
   }
   useEffect(() => {
-    async function fetchData() {
-      const data = await getAllProducts();
-      setDataProducts(data);
-      loader();
-    }
-    fetchData();
+    loader(true)
+      .then(() => {
+        fetchData();
+      })
+      .then(() => {
+        loader(false);
+      });
   }, []);
-  setLoadingState(false);
-  console.log("isLoading from products", isLoading);
+
   const [pagination, setPagination] = useState({
     count: 5, // initial of anything
     from: 0,
@@ -67,15 +66,17 @@ export default function CardsAllProducts() {
 
     if (rememberMe === "true" && isAccessTokenCookies) {
       console.log("remember me", rememberMe);
-      const result = await addSingleProductToCart(id);
-      if (result) {
-        router.push("/");
-      }
+      // const result =
+      await addSingleProductToCart(id);
+      addCartTotalContext();
+      // if (result) {
+      //   router.push("/");
+      // }
     } else {
       if (!isAccessTokenCookies) {
         alert(`You must login first to add product to cart`);
         console.log(accessTokenCookies);
-        router.push("/login");
+        router.push("/pages/login");
       } else {
         await addSingleProductToCart(id);
         addCartTotalContext();
@@ -86,7 +87,9 @@ export default function CardsAllProducts() {
   // console.log(pagination.count, pagination.from, pagination.to);
   if (!dataProducts) {
     return (
-      <div className="flex gap-10 p-10 justify-center">{RotatingLoader}</div>
+      <div className="flex gap-10 p-10 justify-center">
+        <RotatingLoader />
+      </div>
     );
   }
   const productsSlice = dataProducts.slice(pagination.from, pagination.to);
@@ -156,7 +159,7 @@ export default function CardsAllProducts() {
           </IconButton>
           <Button variant="contained">
             {/* <Link to={`${products.id}`}>See Details</Link> */}
-            <Link href={`products/${products.id}`}> See Details </Link>
+            <Link href={`pages/products/${products.id}`}> See Details </Link>
           </Button>
         </CardActions>
       </div>
@@ -166,10 +169,7 @@ export default function CardsAllProducts() {
   return (
     <>
       <div className="flex gap-10 p-10 justify-center">
-        {isLoading ? RotatingLoader : <>{renderProducts}</>}
-        {/* <Suspense fallback={RotatingLoader}>
-        {renderProducts}
-        </Suspense> */}
+        {isLoading ? <RotatingLoader /> : <>{renderProducts}</>}
       </div>
       <div className="flex justify-center items-center p-10 mx-auto">
         <PaginationRounded

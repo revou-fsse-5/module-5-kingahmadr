@@ -1,7 +1,7 @@
 "use client";
 
 import { AllProductsProps } from "@/app/interfaces";
-import React from "react";
+// import React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
@@ -11,8 +11,13 @@ import Button from "@mui/material/Button";
 // import { useDataContext } from "../contexts/UseDataContext";
 import { maxWidthMediaQuery, fontSizeMediaQuery } from "@/app/constans";
 import { useEffect, useState } from "react";
-import { getSingleProducts } from "@/app/Api";
-import Loader from "@/app/components/Loader/Loader";
+import { addSingleProductToCart, getSingleProducts } from "@/app/api";
+import { RotatingLoader } from "@/app/components/Loader/NewLoader";
+import { getCookie, hasCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
+import { UseDataContext } from "@/app/contexts/UseDataContext";
+
+// import Loader from "@/app/components/Loader/Loader";
 
 interface SingleProductProps extends AllProductsProps {
   images: string[];
@@ -24,10 +29,12 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
   //   const { singleDataProduct, getSingleProducts, addSingleProductToCart } =
   //     useFecthData();
   //   const { userToken } = UseDataContext();
-  const { RotatingLoader } = Loader();
+  // const { RotatingLoader } = Loader();
   const [singleDataProduct, setSingleDataProduct] = useState<
     AllProductsProps[] | undefined
   >([]);
+  const router = useRouter();
+  const { addCartTotalContext } = UseDataContext();
   useEffect(() => {
     async function fetchData() {
       const data = await getSingleProducts(params.productsID);
@@ -41,19 +48,37 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
   console.log("Data products", singleDataProduct);
   if (!singleDataProduct) {
     return (
-      <div className="flex gap-10 p-10 justify-center">{RotatingLoader}</div>
+      <div className="flex gap-10 p-10 justify-center">
+        <RotatingLoader />
+        {/* <p>Loading ...</p> */}
+      </div>
     );
   }
-  //   const addToCart = (id?: string | number) => {
-  //     const accessTokenLocal: unknown = localStorage.getItem("token");
-  //     if (accessTokenLocal !== userToken) {
-  //       alert(`You must login first to add product to cart`);
-  //       console.log(userToken);
-  //       navigate("/login");
-  //     } else {
-  //       addSingleProductToCart(id);
-  //     }
-  //   };
+  const addToCart = async (id?: string | number) => {
+    // const accessTokenLocal: unknown = localStorage.getItem("token");
+    const isAccessTokenCookies = hasCookie("token");
+    const accessTokenCookies = getCookie("token");
+    const rememberMe: string | null = localStorage.getItem("rememberMe");
+
+    if (rememberMe === "true" && isAccessTokenCookies) {
+      console.log("remember me", rememberMe);
+      // const result =
+      await addSingleProductToCart(id);
+      addCartTotalContext();
+      // if (result) {
+      //   router.push("/");
+      // }
+    } else {
+      if (!isAccessTokenCookies) {
+        alert(`You must login first to add product to cart`);
+        console.log(accessTokenCookies);
+        router.push("/pages/login");
+      } else {
+        await addSingleProductToCart(id);
+        addCartTotalContext();
+      }
+    }
+  };
 
   const renderSingleProduct = Array.isArray(singleDataProduct) ? (
     singleDataProduct.map((product, index) => (
@@ -130,9 +155,9 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
           </Typography>
           <Button
             sx={{ p: 1, m: "1rem" }}
-            // onClick={() => {
-            //   addToCart(product.id);
-            // }}
+            onClick={() => {
+              addToCart(product.id);
+            }}
             variant="contained"
           >
             Add To Cart
@@ -208,16 +233,16 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
         </Typography>
         <Button
           sx={{ p: 1, m: "1rem" }}
-          //   onClick={() => {
-          //     if (
-          //       (singleDataProduct as SingleProductProps) &&
-          //       (singleDataProduct as SingleProductProps).id
-          //     ) {
-          //       addToCart((singleDataProduct as SingleProductProps).id);
-          //     } else {
-          //       console.error("Product ID is not available");
-          //     }
-          //   }}
+          onClick={() => {
+            if (
+              (singleDataProduct as SingleProductProps) &&
+              (singleDataProduct as SingleProductProps).id
+            ) {
+              addToCart((singleDataProduct as SingleProductProps).id);
+            } else {
+              console.error("Product ID is not available");
+            }
+          }}
           variant="contained"
         >
           Add To Cart

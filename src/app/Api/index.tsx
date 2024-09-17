@@ -2,7 +2,7 @@
 import { AllProductsProps, registerUserProps, UserProps } from "../interfaces";
 import UseLocalStorage from "../lib/UseLocalStorage";
 import { setCookie } from "cookies-next";
-// import LoaderState from "./LoaderState";
+// import { useLoaderState } from "./LoaderState";
 
 interface LoginProps extends UserProps {
   username?: string;
@@ -11,10 +11,11 @@ interface LoginProps extends UserProps {
 // const { setLoaderState } = LoaderState();
 const { setLocalStorage, removeLocalStorage, getLocalStorage } =
   UseLocalStorage();
-// const { setLoaderState } = LoaderState();
+
 const API_URL: string = "https://fakestoreapi.com";
 // const { addCartTotalContext } = UseDataContext();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// const { setLoaderState } = useLoaderState();
 const userAuth = async (data: LoginProps, isChecked: boolean) => {
   const bodyData = JSON.stringify(data);
 
@@ -84,9 +85,7 @@ const addUsersMultiStep = async (data: registerUserProps) => {
 
 const getAllProducts = async (): Promise<AllProductsProps[] | undefined> => {
   const trailing: string = "/products?limit=30";
-
   try {
-    // await setLoaderState(true);
     // await delay(5000);
     const response = await fetch(`${API_URL}${trailing}`, {
       method: "GET",
@@ -100,8 +99,6 @@ const getAllProducts = async (): Promise<AllProductsProps[] | undefined> => {
     return responseData; // Return the data here
   } catch (error) {
     alert(`Error fetching data Products: ${error}`);
-  } finally {
-    // await setLoaderState(false);
   }
 };
 

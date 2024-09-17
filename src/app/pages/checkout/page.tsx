@@ -8,7 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
@@ -20,7 +20,7 @@ import { getCookie, hasCookie } from "cookies-next";
 
 // import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useEffect, useState } from "react";
-import { UseDataContext } from "../contexts/UseDataContext";
+import { UseDataContext } from "../../contexts/UseDataContext";
 
 const style = {
   position: "absolute" as const,
