@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import { match } from "path-to-regexp";
+// import jwt from "jsonwebtoken";
+import { AuthorizationForMiddleware } from "./app/lib/AuthorizationForMiddleware";
 
 // This function can be marked `async` if using `await` inside
 const protectedRoutes = ["/checkout"];
@@ -20,16 +22,36 @@ const isValidPath = (path: string) => {
     return matcher(path);
   });
 };
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const url = request.nextUrl;
   //   const isPublicRoutes = publicRoutes.includes(path)
   const isProtectedRoutes = protectedRoutes.includes(path);
-  const cookieStore = cookies();
-  const token = cookieStore.get("token");
-  console.log("token", token?.value);
+  // const cookieStore = cookies();
+  // const token = cookieStore.get("token");
 
-  if (isProtectedRoutes && !token?.value) {
+  // const decodedToken = jwt.decode(token?.value || " ");
+
+  // console.log("token", token?.value);
+  // console.log("decodedToken", decodedToken);
+
+  // if (decodedToken) {
+  //   console.log("user", decodedToken.user);
+  //   const authorized = await Authorization();
+  //   console.log("authorized log from middleware", authorized);
+  // }
+
+  const authorized = await AuthorizationForMiddleware();
+  console.log("authorized from middleware", authorized);
+  if (authorized) {
+    console.log("authorized from middleware: ", authorized);
+    console.log("Authorized");
+  } else {
+    console.log("authorized from middleware: ", authorized);
+    console.log("Didn't Authorize");
+  }
+
+  if (isProtectedRoutes && !authorized) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 

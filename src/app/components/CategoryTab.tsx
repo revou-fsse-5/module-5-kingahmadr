@@ -12,9 +12,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import CardsAllProducts from "./CardsAllProducts";
+import CardsMensClothingProducts from "./CardMensClothingProducts";
 // import CardsShoesProducts from "./CardsShoesProducts";
 // import CardsProductCategories from "./CardsProductCategories";
-// import CardsMensClothingProducts from "./CardMensClothingProducts";
 // import CardsWomensClothing from "./CardsWomenClothingProducts";
 
 interface TabPanelProps {
@@ -80,11 +80,11 @@ export default function CategoryTab() {
       </TabPanel>
       {/* <TabPanel value={value} index={1}>
         <CardsProductCategories />
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel value={value} index={2}>
         <CardsMensClothingProducts />
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      {/* <TabPanel value={value} index={3}>
         <CardsWomensClothing />
       </TabPanel> */}
     </Box>

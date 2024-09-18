@@ -162,7 +162,14 @@ export default function Navbar() {
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
-            <p>Shopping Cart</p>
+            {/* <p>Shopping Cart</p> */}
+            <button
+              onClick={() => {
+                router.push("/checkout");
+              }}
+            >
+              Shopping Cart
+            </button>
           </MenuItem>
           <MenuItem>
             <IconButton onClick={handleLogout} size="large" color="inherit">

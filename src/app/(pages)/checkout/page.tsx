@@ -21,6 +21,7 @@ import { hasCookie } from "cookies-next";
 // import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useEffect, useState } from "react";
 import { UseDataContext } from "../../contexts/UseDataContext";
+import { Authorization } from "@/app/lib/Authorization";
 
 const style = {
   position: "absolute" as const,
@@ -77,17 +78,22 @@ export default function Page() {
     console.log("Total Price Aggregate", totalPriceAggregate);
   }, [value]);
 
-  const handleOpen = () => {
-    const isAccessTokenCookies = hasCookie("token");
+  const handleOpen = async () => {
+    // const isAccessTokenCookies = hasCookie("token");
     // const accessTokenCookies = getCookie("token");
+    const authorized = await Authorization();
     const rememberMe: string | null = localStorage.getItem("rememberMe");
 
-    if (rememberMe === "true" && isAccessTokenCookies) {
+    if (
+      rememberMe === "true" &&
+      authorized !== null &&
+      authorized !== undefined
+    ) {
       console.log("remember me", rememberMe);
 
       setOpen(true);
     } else {
-      if (!isAccessTokenCookies) {
+      if (authorized === null || authorized === undefined) {
         alert(`You must login first to checkout product from cart`);
         router.push("/login");
       } else {

@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 import { hasCookie } from "cookies-next";
+import { Authorization } from "../lib/Authorization";
 interface userLoginProps {
   access_token: string;
   token: string;
@@ -35,11 +36,32 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
   //     return !!result;
   //   });
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  // useEffect( () => {
+  //   const result = hasCookie("token");
+  //   if (result) {
+  //     setIsAuthenticated(true);
+  //   }
+  // }, []);
   useEffect(() => {
-    const result = hasCookie("token");
-    if (result) {
-      setIsAuthenticated(true);
-    }
+    // async function getAuthorizedValue() {
+    //   const authorized = await Authorization();
+    //   return authorized;
+    // }
+    const fetchAuthorizedValue = async () => {
+      const authorized = await Authorization();
+      if (authorized !== null && authorized !== undefined) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+    // const result = hasCookie("token");
+    // if (result) {
+    //   setIsAuthenticated(true);
+    // }
+    fetchAuthorizedValue();
+    // const hasil = await fetchAuthorizedValue()
+    // console.log("authorized value from context", getAuthorizedValue());
   }, []);
   console.log("isAuthenticated in context", isAuthenticated);
   const [total, setTotal] = useState(0);

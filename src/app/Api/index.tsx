@@ -14,7 +14,7 @@ const { setLocalStorage, removeLocalStorage, getLocalStorage } =
 
 const API_URL: string = "https://fakestoreapi.com";
 // const { addCartTotalContext } = UseDataContext();
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // const { setLoaderState } = useLoaderState();
 const userAuth = async (data: LoginProps, isChecked: boolean) => {
   const bodyData = JSON.stringify(data);
@@ -44,7 +44,7 @@ const userAuth = async (data: LoginProps, isChecked: boolean) => {
     alert(`Login Success`);
 
     setCookie("token", responseData.token, {
-      maxAge: 60 * 5, // 1 day
+      maxAge: 60 * 60 * 5, // 1 day
       path: "/", // Set the cookie for the entire site
       httpOnly: false,
       sameSite: "strict", // Prevent CSRF attacks
@@ -80,6 +80,24 @@ const addUsersMultiStep = async (data: registerUserProps) => {
     alert(`Error Adding new user: ${error}`);
   } finally {
     // setIsLoading(false);
+  }
+};
+
+const getAllUsers = async () => {
+  const trailing = "/users";
+  try {
+    const response = await fetch(`${API_URL}${trailing}`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      alert(`Error fetching Products Users: ${response.statusText}`);
+      return;
+    }
+    const responseData = await response.json();
+    console.log(responseData);
+    return responseData; // Return the data here
+  } catch (error) {
+    alert(`Error fetching data Products: ${error}`);
   }
 };
 
@@ -122,6 +140,26 @@ const getSingleProducts = async (
     alert(`Error fetching data Single Products: ${error}`);
   }
 };
+const getMensClothing = async () => {
+  const trailing: string = "/products/category/men's%20clothing";
+  try {
+    // setIsLoading(true);
+    // await delay(5000);
+    const response = await fetch(`${API_URL}${trailing}`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      alert(
+        `Error fetching Product In Categories Mens Clothing: ${response.statusText}`
+      );
+    }
+    const responseData: AllProductsProps[] = await response.json();
+    console.log("Mens products ", responseData);
+    return responseData;
+  } catch (error) {
+    alert(`Error fetching Product In Categories Mens: ${error}`);
+  }
+};
 
 const addSingleProductToCart = async (id: string | undefined | number) => {
   try {
@@ -160,7 +198,9 @@ const addSingleProductToCart = async (id: string | undefined | number) => {
 export {
   getSingleProducts,
   getAllProducts,
+  getMensClothing,
   userAuth,
+  getAllUsers,
   addUsersMultiStep,
   addSingleProductToCart,
 };
