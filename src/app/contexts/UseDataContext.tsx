@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 
-import { hasCookie } from "cookies-next";
+// import { hasCookie } from "cookies-next";
 import { Authorization } from "../lib/Authorization";
 interface userLoginProps {
   access_token: string;

@@ -103,6 +103,7 @@ const getAllUsers = async () => {
 
 const getAllProducts = async (): Promise<AllProductsProps[] | undefined> => {
   const trailing: string = "/products?limit=30";
+  // const trailing: string = "/product?limit=30";
   try {
     // await delay(5000);
     const response = await fetch(`${API_URL}${trailing}`, {
@@ -161,6 +162,44 @@ const getMensClothing = async () => {
   }
 };
 
+const getJewelryProducts = async () => {
+  const trailing: string = "/products/category/jewelery";
+  try {
+    const response = await fetch(`${API_URL}${trailing}`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      alert(
+        `Error fetching Product In Categories Jewelry: ${response.statusText}`
+      );
+    }
+    const responseData: AllProductsProps[] = await response.json();
+    console.log("Jewelry products ", responseData);
+    return responseData;
+  } catch (error) {
+    alert(`Error fetching Product In Categories Jewelry: ${error}`);
+  }
+};
+
+const getWomensClothing = async () => {
+  const trailing: string = "/products/category/women's%20clothing";
+  try {
+    const response = await fetch(`${API_URL}${trailing}`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      alert(
+        `Error fetching Product In Categories womens clothing: ${response.statusText}`
+      );
+    }
+    const responseData: AllProductsProps[] = await response.json();
+    console.log("Women's clothes products ", responseData);
+    return responseData;
+  } catch (error) {
+    alert(`Error fetching Product In Categories womens clothing: ${error}`);
+  }
+};
+
 const addSingleProductToCart = async (id: string | undefined | number) => {
   try {
     const response = await fetch(`${API_URL}/products/${id}`, {
@@ -199,6 +238,8 @@ export {
   getSingleProducts,
   getAllProducts,
   getMensClothing,
+  getJewelryProducts,
+  getWomensClothing,
   userAuth,
   getAllUsers,
   addUsersMultiStep,
