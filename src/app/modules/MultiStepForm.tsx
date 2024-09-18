@@ -68,7 +68,7 @@ const MultiStepForm: React.FC = () => {
         .then(async () => {
           const result = await addUsersMultiStep(values);
           if (result) {
-            router.push("/pages/login");
+            router.push("/login");
           }
         })
         .then(() => {

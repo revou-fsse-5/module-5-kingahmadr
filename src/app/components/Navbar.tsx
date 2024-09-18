@@ -103,9 +103,7 @@ export default function Navbar() {
       {/* <MenuItem onClick={() => navigate("/products")}>Home</MenuItem>
       <MenuItem onClick={() => navigate("/checkout")}>Checkout</MenuItem> */}
       <MenuItem onClick={() => router.push("/")}>Home</MenuItem>
-      <MenuItem onClick={() => router.push("/pages/checkout")}>
-        Checkout
-      </MenuItem>
+      <MenuItem onClick={() => router.push("/checkout")}>Checkout</MenuItem>
       {/* <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
     </Menu>
   );
@@ -129,26 +127,24 @@ export default function Navbar() {
         <div>
           <MenuItem>
             <IconButton
-              onClick={() => router.push("/pages/login")}
+              onClick={() => router.push("/login")}
               size="large"
               color="inherit"
             >
               <LoginIcon />
             </IconButton>
-            <button onClick={() => router.push("/pages/login")}>Login</button>
+            <button onClick={() => router.push("/login")}>Login</button>
             {/* <p>Login</p> */}
           </MenuItem>
           <MenuItem>
             <IconButton
-              onClick={() => router.push("/pages/register")}
+              onClick={() => router.push("/register")}
               size="large"
               color="inherit"
             >
               <PersonAddAltIcon />
             </IconButton>
-            <button onClick={() => router.push("/pages/register")}>
-              Register
-            </button>
+            <button onClick={() => router.push("/register")}>Register</button>
           </MenuItem>
         </div>
       ) : (
@@ -159,7 +155,7 @@ export default function Navbar() {
               aria-label="show notif on cart"
               color="inherit"
               onClick={() => {
-                router.push("/pages/checkout");
+                router.push("/checkout");
               }}
             >
               <Badge badgeContent={total} color="error">
@@ -213,7 +209,7 @@ export default function Navbar() {
             {!isAuthenticated ? (
               <>
                 <IconButton
-                  onClick={() => router.push("/pages/register")}
+                  onClick={() => router.push("/register")}
                   size="large"
                   color="inherit"
                 >
@@ -227,7 +223,7 @@ export default function Navbar() {
                   </Typography>
                 </IconButton>
                 <IconButton
-                  onClick={() => router.push("/pages/login")}
+                  onClick={() => router.push("/login")}
                   size="large"
                   color="inherit"
                 >
@@ -248,7 +244,7 @@ export default function Navbar() {
                   aria-label="show notif on cart"
                   color="inherit"
                   onClick={() => {
-                    router.push("/pages/checkout");
+                    router.push("/checkout");
                   }}
                 >
                   <Badge badgeContent={total} color="error">

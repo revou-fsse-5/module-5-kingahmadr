@@ -76,7 +76,7 @@ export default function CardsAllProducts() {
       if (!isAccessTokenCookies) {
         alert(`You must login first to add product to cart`);
         console.log(accessTokenCookies);
-        router.push("/pages/login");
+        router.push("/login");
       } else {
         await addSingleProductToCart(id);
         addCartTotalContext();
