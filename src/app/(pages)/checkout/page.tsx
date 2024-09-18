@@ -16,7 +16,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import { getCookie, hasCookie } from "cookies-next";
+import { hasCookie } from "cookies-next";
 
 // import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useEffect, useState } from "react";
@@ -41,14 +41,14 @@ interface valueProps {
   // other properties...
 }
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
 
   const [value, setValue] = useState<valueProps[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   //   const [trigger, setTrigger] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const { userToken, triggerInContext, handleTrigger } = UseDataContext();
+  const [open, setOpen] = useState(false);
+  const { triggerInContext, handleTrigger } = UseDataContext();
   // const navigate = useNavigate();
 
   useEffect(() => {

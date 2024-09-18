@@ -159,7 +159,7 @@ export default function CardsAllProducts() {
           </IconButton>
           <Button variant="contained">
             {/* <Link to={`${products.id}`}>See Details</Link> */}
-            <Link href={`pages/products/${products.id}`}> See Details </Link>
+            <Link href={`/products/${products.id}`}> See Details </Link>
           </Button>
         </CardActions>
       </div>
