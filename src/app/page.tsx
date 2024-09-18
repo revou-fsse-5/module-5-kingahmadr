@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import CategoryTab from "./components/CategoryTab";
 import Navbar from "./components/Navbar";
 // import Loading from "./Loading";

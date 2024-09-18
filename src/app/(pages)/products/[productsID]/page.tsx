@@ -13,9 +13,10 @@ import { maxWidthMediaQuery, fontSizeMediaQuery } from "@/app/constans";
 import { useEffect, useState } from "react";
 import { addSingleProductToCart, getSingleProducts } from "@/app/api";
 import { RotatingLoader } from "@/app/components/Loader/NewLoader";
-import { getCookie, hasCookie } from "cookies-next";
+// import { getCookie, hasCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { UseDataContext } from "@/app/contexts/UseDataContext";
+import { Authorization } from "@/app/lib/Authorization";
 
 // import Loader from "@/app/components/Loader/Loader";
 
@@ -26,10 +27,6 @@ interface SingleProductProps extends AllProductsProps {
 }
 
 const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
-  //   const { singleDataProduct, getSingleProducts, addSingleProductToCart } =
-  //     useFecthData();
-  //   const { userToken } = UseDataContext();
-  // const { RotatingLoader } = Loader();
   const [singleDataProduct, setSingleDataProduct] = useState<
     AllProductsProps[] | undefined
   >([]);
@@ -54,13 +51,17 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
       </div>
     );
   }
+
   const addToCart = async (id?: string | number) => {
-    // const accessTokenLocal: unknown = localStorage.getItem("token");
-    const isAccessTokenCookies = hasCookie("token");
-    const accessTokenCookies = getCookie("token");
     const rememberMe: string | null = localStorage.getItem("rememberMe");
 
-    if (rememberMe === "true" && isAccessTokenCookies) {
+    const authorized = await Authorization();
+
+    if (
+      rememberMe === "true" &&
+      authorized !== null &&
+      authorized !== undefined
+    ) {
       console.log("remember me", rememberMe);
       // const result =
       await addSingleProductToCart(id);
@@ -69,9 +70,10 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
       //   router.push("/");
       // }
     } else {
-      if (!isAccessTokenCookies) {
+      if (authorized === null || authorized === undefined) {
         alert(`You must login first to add product to cart`);
-        console.log(accessTokenCookies);
+        console.log("authorized from products", authorized);
+        // console.log(accessTokenCookies);
         router.push("/login");
       } else {
         await addSingleProductToCart(id);

@@ -42,6 +42,11 @@ interface valueProps {
   // other properties...
 }
 
+// interface ItemProps {
+//   title: string;
+//   quantity?: number; // Optional, as it will be added during aggregation
+// }
+
 export default function Page() {
   const router = useRouter();
 
@@ -56,15 +61,20 @@ export default function Page() {
     const storeData = localStorage.getItem("Carted");
     const itemArray = storeData ? JSON.parse(storeData) : [];
 
-    const aggregatedItems = itemArray.reduce((acc: any, item: any) => {
-      const existingItem = acc.find((i: any) => i.title === item.title);
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        acc.push({ ...item, quantity: 1 });
-      }
-      return acc;
-    }, []);
+    const aggregatedItems = itemArray.reduce(
+      (acc: valueProps[], item: valueProps) => {
+        const existingItem = acc.find(
+          (i: valueProps) => i.title === item.title
+        );
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          acc.push({ ...item, quantity: 1 });
+        }
+        return acc;
+      },
+      []
+    );
     setValue(aggregatedItems);
     console.log(aggregatedItems);
   }, [triggerInContext]);
@@ -113,7 +123,9 @@ export default function Page() {
     const itemArray = storeData ? JSON.parse(storeData) : [];
 
     // Filter out the item with the given id
-    const filteredItems = itemArray.filter((i: any) => i.id !== idToRemove);
+    const filteredItems = itemArray.filter(
+      (i: valueProps) => i.id !== idToRemove
+    );
 
     // Update localStorage with the filtered array
     // setTrigger(!trigger);

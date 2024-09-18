@@ -16,8 +16,10 @@ import { UseDataContext } from "../contexts/UseDataContext";
 import { RotatingLoader } from "./Loader/NewLoader";
 import { AllProductsProps } from "../interfaces";
 import { getAllProducts, addSingleProductToCart } from "../api";
+// import { getAllProducts } from "../api";
 import { useRouter } from "next/navigation";
 import { Authorization } from "../lib/Authorization";
+// import { AddToCart } from "../lib/AddToCart";
 
 const pageSize = 3;
 
@@ -29,6 +31,7 @@ export default function CardsAllProducts() {
   const router = useRouter();
 
   const { addCartTotalContext, isLoading, setLoadingState } = UseDataContext();
+  // const { isLoading, setLoadingState } = UseDataContext();
 
   const [dataProducts, setDataProducts] = useState<
     AllProductsProps[] | undefined
@@ -69,12 +72,8 @@ export default function CardsAllProducts() {
       authorized !== undefined
     ) {
       console.log("remember me", rememberMe);
-      // const result =
       await addSingleProductToCart(id);
       addCartTotalContext();
-      // if (result) {
-      //   router.push("/");
-      // }
     } else {
       if (authorized === null || authorized === undefined) {
         alert(`You must login first to add product to cart`);

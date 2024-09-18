@@ -2,14 +2,14 @@ import { getAllUsers } from "../api";
 // import { cookies } from "next/headers";
 import { getCookie } from "cookies-next";
 import { registerUserProps } from "../interfaces";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export const Authorization = async () => {
   //   const cookieStore = cookies();
   //   const token = cookieStore.get("token");
 
   const token = getCookie("token");
-  const decodedToken = jwt.decode(token || " ");
+  const decodedToken = jwt.decode(token || " ") as JwtPayload | null;
   let response = null;
   if (decodedToken) {
     const allUsers = await getAllUsers();

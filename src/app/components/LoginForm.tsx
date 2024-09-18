@@ -2,14 +2,10 @@
 
 import { useFormik } from "formik";
 import { UserProps } from "../interfaces";
-// import useFecthData from "../hooks/useFecthData";
 import tailwindStyles from "../scripts/constans/styles";
 import { LoginValidationForm } from "../modules/Schema";
-// import Navbar from "./Navbar";
 import { useEffect, useState } from "react";
-// import Loader from "./Loader/Loader";
 import { userAuth } from "../api";
-import { useRouter } from "next/navigation";
 import { UseDataContext } from "../contexts/UseDataContext";
 import { RotatingLoader } from "./Loader/NewLoader";
 
@@ -18,9 +14,7 @@ interface LoginProps extends UserProps {
 }
 const LoginForm = () => {
   const { isLoading, setLoadingState } = UseDataContext();
-  const router = useRouter();
   const [checked, setChecked] = useState<boolean>(false);
-  // const { RotatingLoader } = Loader();
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
   useEffect(() => {
@@ -62,7 +56,9 @@ const LoginForm = () => {
     },
     validationSchema: LoginValidationForm,
     onSubmit: (values, { setSubmitting }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...dataToSubmit } = values;
+      // console.log(confirmPassword)
       setTimeout(() => {
         handleSubmit(dataToSubmit, checked);
         setSubmitting(false);

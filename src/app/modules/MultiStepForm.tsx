@@ -83,6 +83,7 @@ const MultiStepForm: React.FC = () => {
       initialValues={initialValues}
       validationSchema={validationSchema[step - 1]}
       onSubmit={(values, { setSubmitting }) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { confirmPassword, ...dataToSubmit } = values;
         setTimeout(() => {
           if (step === validationSchema.length) {

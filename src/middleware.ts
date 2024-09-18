@@ -14,6 +14,7 @@ const validPaths = [
   "/login",
   "/register",
   "/checkout",
+  "/fetch",
 ];
 // const publicRoutes = ["/login", "/signup", "/"];
 const isValidPath = (path: string) => {

@@ -14,19 +14,19 @@
 // };
 
 // export default LoaderState;
-"use client";
-import { useState } from "react";
-// import { UseDataContext, DataProvider } from "../contexts/UseDataContext";
+// "use client";
+// import { useState } from "react";
+// // import { UseDataContext, DataProvider } from "../contexts/UseDataContext";
 
-export const useLoaderState = () => {
-  //   const { setLoadingState } = UseDataContext();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+// export const useLoaderState = () => {
+//   //   const { setLoadingState } = UseDataContext();
+//   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const setLoaderState = (value: boolean) => {
-    setIsLoading(value);
-  };
+//   const setLoaderState = (value: boolean) => {
+//     setIsLoading(value);
+//   };
 
-  return {
-    setLoaderState,
-  };
-};
+//   return {
+//     setLoaderState,
+//   };
+// };

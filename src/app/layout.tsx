@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 // import localFont from "next/font/local";
 // import  RotatingLoader  from "./components/Loader/Loader";
 import "./globals.css";
-import { RotatingLoader } from "./components/Loader/NewLoader";
-import Loading from "./Loading";
+// import { RotatingLoader } from "./components/Loader/NewLoader";
+// import Loading from "./Loading";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -16,7 +16,6 @@ import Loading from "./Loading";
 //   weight: "100 900",
 // });
 import { DataProvider } from "./contexts/UseDataContext";
-import { Suspense } from "react";
 
 // const { RotatingLoader } = Loader()
 export const metadata: Metadata = {
@@ -32,7 +31,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-      // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
         <DataProvider>{children}</DataProvider>
       </body>
