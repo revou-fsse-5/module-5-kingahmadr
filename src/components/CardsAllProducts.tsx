@@ -10,45 +10,54 @@ import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import PaginationRounded from "./PaginationRounded";
 import { UseDataContext } from "../contexts/UseDataContext";
 import { RotatingLoader } from "./loader/NewLoader";
 import { AllProductsProps } from "../interfaces";
-import { getAllProducts, addSingleProductToCart } from "../api";
+// import { getAllProducts, addSingleProductToCart } from "../api";
+import { addSingleProductToCart } from "../api";
 // import { getAllProducts } from "../api";
 import { useRouter } from "next/navigation";
 import { Authorization } from "../lib/Authorization";
 // import { AddToCart } from "../lib/AddToCart";
-
+interface DataProps {
+  data: AllProductsProps[];
+}
 const pageSize = 3;
 
-export default function CardsAllProducts() {
+export default function CardsAllProducts({ data }: DataProps) {
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
   // const { RotatingLoader } = Loader();
   const router = useRouter();
 
+  // const { addCartTotalContext, isLoading, setLoadingState } = UseDataContext();
   const { addCartTotalContext, isLoading, setLoadingState } = UseDataContext();
   // const { isLoading, setLoadingState } = UseDataContext();
 
-  const [dataProducts, setDataProducts] = useState<
-    AllProductsProps[] | undefined
-  >([]);
+  // const [dataProducts, setDataProducts] = useState<
+  //   AllProductsProps[] | undefined
+  // >([]);
   async function loader(value: boolean) {
     setLoadingState(value);
-    await delay(2000);
+    // await delay(2000);
   }
 
-  async function fetchData() {
-    const data = await getAllProducts();
-    setDataProducts(data);
+  async function setDelay(value: number) {
+    await delay(value);
   }
+
+  // async function fetchData() {
+  //   const data = await getAllProducts();
+  //   setDataProducts(data);
+  // }
   useEffect(() => {
     loader(true)
       .then(() => {
-        fetchData();
+        setDelay(2000);
       })
       .then(() => {
         loader(false);
@@ -88,14 +97,14 @@ export default function CardsAllProducts() {
   };
 
   // console.log(pagination.count, pagination.from, pagination.to);
-  if (!dataProducts) {
+  if (!data) {
     return (
       <div className="flex gap-10 p-10 justify-center">
         <RotatingLoader />
       </div>
     );
   }
-  const productsSlice = dataProducts.slice(pagination.from, pagination.to);
+  const productsSlice = data.slice(pagination.from, pagination.to);
 
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
@@ -105,7 +114,7 @@ export default function CardsAllProducts() {
     const to = (page - 1) * pageSize + pageSize;
     setPagination({
       ...pagination,
-      count: dataProducts.length,
+      count: data.length,
       from: from,
       to: to,
     });
@@ -173,6 +182,7 @@ export default function CardsAllProducts() {
     <>
       <div className="flex gap-10 p-10 justify-center">
         {isLoading ? <RotatingLoader /> : <>{renderProducts}</>}
+        {/* {renderProducts} */}
       </div>
       <div className="flex justify-center items-center p-10 mx-auto">
         <PaginationRounded

@@ -9,6 +9,11 @@ import CardsAllProducts from "./CardsAllProducts";
 import CardsMensClothingProducts from "./CardMensClothingProducts";
 import CardsJewelryProduct from "./CardsJewelryProduct";
 import CardsWomensClothing from "./CardsWomenClothingProducts";
+import { AllProductsProps } from "@/interfaces";
+
+interface DataProps {
+  data: AllProductsProps[];
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -40,7 +45,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function CategoryTab() {
+export default function CategoryTab({ data }: DataProps) {
   const [value, setValue] = React.useState(0);
   // const theme = useTheme();
   // const handleChangeIndex = (index: number) => {
@@ -69,7 +74,7 @@ export default function CategoryTab() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <CardsAllProducts />
+        <CardsAllProducts data={data} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <CardsJewelryProduct />

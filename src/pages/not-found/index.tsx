@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Pages404 = () => {
   return (
     <main
@@ -32,14 +34,22 @@ const Pages404 = () => {
             >
               <span>&larr;</span> Go back home
             </button> */}
-          <a
+          <Link
             href="/"
             className="text-xs sm:text-lg font-semibold text-gray-100
                       rounded-md hover:bg-gray-100/20 hover:backdrop-blur
                       px-2 py-2.5 sm:px-3.5 "
           >
             Go back home <span aria-hidden="true">&rarr;</span>
-          </a>
+          </Link>
+          {/* <a
+            href="/"
+            className="text-xs sm:text-lg font-semibold text-gray-100
+                      rounded-md hover:bg-gray-100/20 hover:backdrop-blur
+                      px-2 py-2.5 sm:px-3.5 "
+          >
+            Go back home <span aria-hidden="true">&rarr;</span>
+          </a> */}
         </div>
       </div>
     </main>

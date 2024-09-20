@@ -44,7 +44,7 @@ const userAuth = async (data: LoginProps, isChecked: boolean) => {
     alert(`Login Success`);
 
     setCookie("token", responseData.token, {
-      maxAge: 60 * 60 * 5, // 1 day
+      maxAge: 60 * 5, // 5 minutes
       path: "/", // Set the cookie for the entire site
       httpOnly: false,
       sameSite: "strict", // Prevent CSRF attacks
