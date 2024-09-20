@@ -86,6 +86,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const response = await fetch(
     `https://fakestoreapi.com/products/${params.productsID}`
   );
+
+  if (!response.ok) {
+    return { notFound: true };
+  }
   const data: AllProductsProps[] = await response.json();
   console.log("server", data);
   return {
