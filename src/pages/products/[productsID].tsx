@@ -91,6 +91,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return { notFound: true };
   }
   const data: AllProductsProps[] = await response.json();
+  if (!data) {
+    return { notFound: true };
+  }
   console.log("server", data);
   return {
     props: {
