@@ -6,6 +6,16 @@ const nextConfig = {
       fullUrl: true,
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "fakestoreapi.com",
+        port: "",
+        pathname: "/img/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

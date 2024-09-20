@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PaginationRounded from "./PaginationRounded";
 import { UseDataContext } from "../contexts/UseDataContext";
-import { RotatingLoader } from "./Loader/NewLoader";
+import { RotatingLoader } from "./loader/NewLoader";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { AllProductsProps } from "../interfaces";
 import { getMensClothing, addSingleProductToCart } from "../api";

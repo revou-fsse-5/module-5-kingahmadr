@@ -7,7 +7,7 @@ import { LoginValidationForm } from "../modules/Schema";
 import { useEffect, useState } from "react";
 import { userAuth } from "../api";
 import { UseDataContext } from "../contexts/UseDataContext";
-import { RotatingLoader } from "./Loader/NewLoader";
+import { RotatingLoader } from "./loader/NewLoader";
 
 interface LoginProps extends UserProps {
   username?: string;

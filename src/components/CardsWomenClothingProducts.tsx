@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { UseDataContext } from "../contexts/UseDataContext";
-import { RotatingLoader } from "./Loader/NewLoader";
+import { RotatingLoader } from "./loader/NewLoader";
 import { AllProductsProps } from "../interfaces";
 import { getWomensClothing, addSingleProductToCart } from "../api";
 import { useRouter } from "next/navigation";

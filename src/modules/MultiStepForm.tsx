@@ -6,7 +6,7 @@ import ProfileForm from "../components/register/ProfileForm";
 import AccountForm from "../components/register/AccountForm";
 import AddressForm from "../components/register/AddressForm";
 import { UseDataContext } from "../contexts/UseDataContext";
-import { RotatingLoader } from "../components/Loader/NewLoader";
+import { RotatingLoader } from "../components/loader/NewLoader";
 
 import {
   ProfileValidationForm,

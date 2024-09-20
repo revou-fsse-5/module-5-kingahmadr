@@ -13,7 +13,7 @@ import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import PaginationRounded from "./PaginationRounded";
 import { UseDataContext } from "../contexts/UseDataContext";
-import { RotatingLoader } from "./Loader/NewLoader";
+import { RotatingLoader } from "./loader/NewLoader";
 import { AllProductsProps } from "../interfaces";
 import { getAllProducts, addSingleProductToCart } from "../api";
 // import { getAllProducts } from "../api";

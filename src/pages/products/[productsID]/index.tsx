@@ -1,22 +1,21 @@
-"use client";
+// "use client";
 
-import { AllProductsProps } from "@/app/interfaces";
+import { AllProductsProps } from "@/interfaces";
 // import React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import Navbar from "@/app/components/Navbar";
+import Navbar from "@/components/Navbar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-// import { useDataContext } from "../contexts/UseDataContext";
-import { maxWidthMediaQuery, fontSizeMediaQuery } from "@/app/constans";
-import { useEffect, useState } from "react";
-import { addSingleProductToCart, getSingleProducts } from "@/app/api";
-import { RotatingLoader } from "@/app/components/Loader/NewLoader";
-// import { getCookie, hasCookie } from "cookies-next";
+import { maxWidthMediaQuery, fontSizeMediaQuery } from "@/constans";
+// import { useEffect, useState } from "react";
+import { addSingleProductToCart } from "@/api";
+// import { RotatingLoader } from "@/components/Loader/NewLoader";
 import { useRouter } from "next/navigation";
-import { UseDataContext } from "@/app/contexts/UseDataContext";
-import { Authorization } from "@/app/lib/Authorization";
+import { UseDataContext } from "@/contexts/UseDataContext";
+import { Authorization } from "@/lib/Authorization";
+import { GetStaticProps, GetStaticPaths } from "next";
 
 // import Loader from "@/app/components/Loader/Loader";
 
@@ -26,31 +25,100 @@ interface SingleProductProps extends AllProductsProps {
   // other properties...
 }
 
-const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
-  const [singleDataProduct, setSingleDataProduct] = useState<
-    AllProductsProps[] | undefined
-  >([]);
+interface DataProps {
+  data: AllProductsProps;
+}
+
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const response = await fetch("http://localhost:9000/books?_limit=10");
+//   const books: IBook[] = await response.json();
+//   console.log("path");
+//   const paths = books.map((book) => ({
+//     params: { bookId: book.id.toString() },
+//   }));
+
+//   return { paths, fallback: true };
+// };
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const response = await fetch("https://fakestoreapi.com/products?limit=30");
+
+  const data: AllProductsProps[] = await response.json();
+  // if (!data) {
+  //   return { paths: [], fallback: true };
+  // }
+  console.log("path");
+  const paths = data
+    .filter((product) => product.id !== undefined)
+    .map((product) => ({
+      params: { productsID: product.id!.toString() },
+    }));
+
+  return { paths, fallback: true };
+};
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   // const router = useRouter()
+//   // const notFound = router.push('/not-found')
+//   const { params } = context;
+//   if (!params?.productsID) {
+//     return { notFound: true };
+//   }
+//   const response = await fetch(
+//     `https://fakestoreapi.com/products/${params.productsID}`
+//   );
+//   const data: AllProductsProps[] = await response.json();
+//   console.log("server", data);
+//   return {
+//     props: {
+//       data,
+//     },
+//   };
+// };
+export const getStaticProps: GetStaticProps = async (context) => {
+  // const router = useRouter()
+  // const notFound = router.push('/not-found')
+  const { params } = context;
+  if (!params?.productsID) {
+    return { notFound: true };
+  }
+  const response = await fetch(
+    `https://fakestoreapi.com/products/${params.productsID}`
+  );
+  const data: AllProductsProps[] = await response.json();
+  console.log("server", data);
+  return {
+    props: {
+      data,
+    },
+  };
+};
+
+const ProductDetailPage = ({ data }: DataProps) => {
+  // const [singleDataProduct, setSingleDataProduct] = useState<
+  //   AllProductsProps[] | undefined
+  // >([]);
   const router = useRouter();
   const { addCartTotalContext } = UseDataContext();
-  useEffect(() => {
-    async function fetchData() {
-      const data = await getSingleProducts(params.productsID);
-      setSingleDataProduct(data);
-      console.log("data", data);
-    }
-    fetchData();
-  }, [params.productsID]);
-  //   const singleDataProduct: AllProductsProps[] | undefined =
-  //     await getSingleProducts(params.productsID);
-  console.log("Data products", singleDataProduct);
-  if (!singleDataProduct) {
-    return (
-      <div className="flex gap-10 p-10 justify-center">
-        <RotatingLoader />
-        {/* <p>Loading ...</p> */}
-      </div>
-    );
-  }
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const data = await getSingleProducts(params.productsID);
+  //     setSingleDataProduct(data);
+  //     console.log("data", data);
+  //   }
+  //   fetchData();
+  // }, [params.productsID]);
+  // //   const singleDataProduct: AllProductsProps[] | undefined =
+  // //     await getSingleProducts(params.productsID);
+  // console.log("Data products", singleDataProduct);
+  // if (!singleDataProduct) {
+  //   return (
+  //     <div className="flex gap-10 p-10 justify-center">
+  //       <RotatingLoader />
+  //       {/* <p>Loading ...</p> */}
+  //     </div>
+  //   );
+  // }
 
   const addToCart = async (id?: string | number) => {
     const rememberMe: string | null = localStorage.getItem("rememberMe");
@@ -63,12 +131,8 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
       authorized !== undefined
     ) {
       console.log("remember me", rememberMe);
-      // const result =
       await addSingleProductToCart(id);
       addCartTotalContext();
-      // if (result) {
-      //   router.push("/");
-      // }
     } else {
       if (authorized === null || authorized === undefined) {
         alert(`You must login first to add product to cart`);
@@ -82,8 +146,8 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
     }
   };
 
-  const renderSingleProduct = Array.isArray(singleDataProduct) ? (
-    singleDataProduct.map((product, index) => (
+  const renderSingleProduct = Array.isArray(data) ? (
+    data.map((product, index) => (
       <Box
         component="section"
         key={index}
@@ -187,7 +251,7 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
         <CardMedia
           component="img"
           height="auto"
-          image={(singleDataProduct as SingleProductProps).image}
+          image={(data as SingleProductProps).image}
           alt="Product image"
         />
       </Card>
@@ -206,7 +270,7 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
             fontWeight: "bold",
           }}
         >
-          {(singleDataProduct as SingleProductProps).title}
+          {(data as SingleProductProps).title}
         </Typography>
         <Typography
           variant="body2"
@@ -220,7 +284,7 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
             m: "1.5rem",
           }}
         >
-          {(singleDataProduct as SingleProductProps).description}
+          {(data as SingleProductProps).description}
         </Typography>
         <Typography
           variant="body2"
@@ -231,16 +295,16 @@ const ProductDetailPage = ({ params }: { params: { productsID: string } }) => {
             fontWeight: "bold",
           }}
         >
-          {`Price: $${(singleDataProduct as SingleProductProps).price},00`}
+          {`Price: $${(data as SingleProductProps).price},00`}
         </Typography>
         <Button
           sx={{ p: 1, m: "1rem" }}
           onClick={() => {
             if (
-              (singleDataProduct as SingleProductProps) &&
-              (singleDataProduct as SingleProductProps).id
+              (data as SingleProductProps) &&
+              (data as SingleProductProps).id
             ) {
-              addToCart((singleDataProduct as SingleProductProps).id);
+              addToCart((data as SingleProductProps).id);
             } else {
               console.error("Product ID is not available");
             }
