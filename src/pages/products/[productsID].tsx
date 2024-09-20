@@ -21,6 +21,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 
 interface SingleProductProps extends AllProductsProps {
   images: string[];
+  image: string;
   title: string;
   // other properties...
 }
@@ -90,6 +91,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       data,
+      revalidate: 3,
     },
   };
 };
