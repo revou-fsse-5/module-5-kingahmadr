@@ -11,9 +11,21 @@ import HomePage from "./pages/Home";
 import CartPage from "./pages/CartPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import ProductCard, { ProductCardProps } from "./components/ProductCard";
 import ProtectedRoute from "./modules/ProtectedRoute";
 import Pages404 from "./pages/Pages404";
-
+const mockProductData: ProductCardProps["data"] = {
+  id: 1,
+  title: "Test Product",
+  price: 29.99,
+  description: "This is a test product description.",
+  category: {
+    id: 1,
+    name: "Test Category",
+    image: "https://via.placeholder.com/150",
+  },
+  images: ["https://via.placeholder.com/150"],
+};
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,6 +59,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/productdata",
+    element: <ProductCard data={mockProductData} />,
   },
   {
     path: "*",
